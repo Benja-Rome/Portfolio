@@ -1,131 +1,124 @@
 document.addEventListener("DOMContentLoaded", () => {
-	// ==========================================
-	// 1. CONTROL DE Z-INDEX INTELIGENTE (SIN ESCALA INFINITA)
-	// ==========================================
-	const windows = Array.from(document.querySelectorAll(".window"));
+  // ==========================================
+  // 1. CONTROL DE Z-INDEX INTELIGENTE (SIN ESCALA INFINITA)
+  // ==========================================
+  const windows = Array.from(document.querySelectorAll(".window"));
 
-	// Inicializamos cada ventana con un z-index base si no lo tienen
-	windows.forEach((w, index) => {
-		if (!w.style.zIndex) w.style.zIndex = index + 1;
-	});
+  windows.forEach((w, index) => {
+    if (!w.style.zIndex) w.style.zIndex = index + 1;
+  });
 
-	windows.forEach((windowEl) => {
-		windowEl.addEventListener("mousedown", () => {
-			// 1. Buscamos el z-index más alto actual en la pantalla
-			let maxZ = 0;
-			windows.forEach((w) => {
-				const currentZ = parseInt(w.style.zIndex) || 1;
-				if (currentZ > maxZ) maxZ = currentZ;
-			});
+  windows.forEach((windowEl) => {
+    windowEl.addEventListener("mousedown", () => {
+      let maxZ = 0;
+      windows.forEach((w) => {
+        const currentZ = parseInt(w.style.zIndex) || 1;
+        if (currentZ > maxZ) maxZ = currentZ;
+      });
 
-			// 2. Si esta ventana ya es la que está arriba de todo, salimos de la función
-			if (parseInt(windowEl.style.zIndex) === maxZ && maxZ > 0) return;
+      if (parseInt(windowEl.style.zIndex) === maxZ && maxZ > 0) return;
 
-			// 3. Si no, la ponemos un paso por encima del máximo actual
-			const nextZ = maxZ + 1;
-			windowEl.style.zIndex = nextZ;
+      const nextZ = maxZ + 1;
+      windowEl.style.zIndex = nextZ;
 
-			// 4. CONTROL DE SEGURIDAD: Si el número sube mucho, normalizamos el mazo
-			if (nextZ > 100) {
-				// Ordenamos el array de ventanas según su z-index actual de menor a mayor
-				windows.sort(
-					(a, b) =>
-						(parseInt(a.style.zIndex) || 1) - (parseInt(b.style.zIndex) || 1),
-				);
-				// Reasignamos valores limpios empezando desde 1, manteniendo el orden intacto
-				windows.forEach((w, index) => {
-					w.style.zIndex = index + 1;
-				});
-			}
-		});
-	});
+      if (nextZ > 100) {
+        windows.sort(
+          (a, b) =>
+            (parseInt(a.style.zIndex) || 1) - (parseInt(b.style.zIndex) || 1),
+        );
+        windows.forEach((w, index) => {
+          w.style.zIndex = index + 1;
+        });
+      }
+    });
+  });
 
-	// ==========================================
-	// 2. FUNCIÓN PARA EL ARRASTRE (DRAG & DROP)
-	// ==========================================
-	const titleBars = document.querySelectorAll(".title-bar");
+  // ==========================================
+  // 2. FUNCIÓN PARA EL ARRASTRE (DRAG & DROP)
+  // ==========================================
+  const titleBars = document.querySelectorAll(".title-bar");
 
-	titleBars.forEach((titleBar) => {
-		const windowEl = titleBar.closest(".window");
-		if (!windowEl) return;
+  titleBars.forEach((titleBar) => {
+    const windowEl = titleBar.closest(".window");
+    if (!windowEl) return;
 
-		titleBar.style.cursor = "move";
+    titleBar.style.cursor = "move";
 
-		titleBar.addEventListener("mousedown", (e) => {
-			if (e.target.closest(".title-bar-controls")) return;
+    titleBar.addEventListener("mousedown", (e) => {
+      if (e.target.closest(".title-bar-controls")) return;
 
-			e.preventDefault();
+      e.preventDefault();
 
-			const rect = windowEl.getBoundingClientRect();
-			const shiftX = e.clientX - rect.left;
-			const shiftY = e.clientY - rect.top;
+      const rect = windowEl.getBoundingClientRect();
+      const shiftX = e.clientX - rect.left;
+      const shiftY = e.clientY - rect.top;
 
-			windowEl.style.position = "absolute";
-			windowEl.style.margin = "0";
+      windowEl.style.position = "absolute";
+      windowEl.style.margin = "0";
 
-			function moveAt(clientX, clientY) {
-				windowEl.style.left = clientX - shiftX + "px";
-				windowEl.style.top = clientY - shiftY + "px";
-			}
+      function moveAt(clientX, clientY) {
+        windowEl.style.left = clientX - shiftX + "px";
+        windowEl.style.top = clientY - shiftY + "px";
+      }
 
-			moveAt(e.clientX, e.clientY);
+      moveAt(e.clientX, e.clientY);
 
-			function onMouseMove(event) {
-				moveAt(event.clientX, event.clientY);
-			}
+      function onMouseMove(event) {
+        moveAt(event.clientX, event.clientY);
+      }
 
-			document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mousemove", onMouseMove);
 
-			document.addEventListener(
-				"mouseup",
-				() => {
-					document.removeEventListener("mousemove", onMouseMove);
-				},
-				{ once: true },
-			);
-		});
-	});
+      document.addEventListener(
+        "mouseup",
+        () => {
+          document.removeEventListener("mousemove", onMouseMove);
+        },
+        { once: true },
+      );
+    });
+  });
 
-	// ==========================================
-	// 3. CÓDIGO DE LAS PESTAÑAS (TABS)
-	// ==========================================
-	const tabs = document.querySelectorAll('[role="tab"]');
-	const panels = document.querySelectorAll('[role="tabpanel"]');
+  // ==========================================
+  // 3. CÓDIGO DE LAS PESTAÑAS (TABS)
+  // ==========================================
+  const tabs = document.querySelectorAll('[role="tab"]');
+  const panels = document.querySelectorAll('[role="tabpanel"]');
 
-	tabs.forEach((tab) => {
-		tab.addEventListener("click", (event) => {
-			event.preventDefault();
-			tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-			tab.setAttribute("aria-selected", "true");
-			panels.forEach((panel) => (panel.style.display = "none"));
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", (event) => {
+      event.preventDefault();
+      tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
+      tab.setAttribute("aria-selected", "true");
+      panels.forEach((panel) => (panel.style.display = "none"));
 
-			const targetPanelId = tab.getAttribute("aria-controls");
-			const targetPanel = document.getElementById(targetPanelId);
-			if (targetPanel) {
-				targetPanel.style.display = "block";
-			}
-		});
-	});
+      const targetPanelId = tab.getAttribute("aria-controls");
+      const targetPanel = document.getElementById(targetPanelId);
+      if (targetPanel) {
+        /* Modificaciones agregadas para solucionar la altura de las pestañas */
+        targetPanel.style.display = "flex";
+      }
+    });
+  });
 
-	// ==========================================
-	// 4. CÓDIGO PARA STARTBUTTON
-	// ==========================================
+  // ==========================================
+  // 4. CÓDIGO PARA STARTBUTTON
+  // ==========================================
+  const image = document.getElementById("startButton");
 
-	const image = document.getElementById("startButton");
+  if (image) {
+    image.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      image.src = "./img/start-hundido.png";
+    });
 
-	if (image) {
-		image.addEventListener("mousedown", (e) => {
-			e.preventDefault();
-			image.src = "./img/start-hundido.png";
-		});
+    image.addEventListener("mouseup", () => {
+      image.src = "./img/start.png";
+      console.log("Señal: Menú Inicio abierto");
+    });
 
-		image.addEventListener("mouseup", () => {
-			image.src = "./img/start.png";
-			console.log("Señal: Menú Inicio abierto");
-		});
-
-		image.addEventListener("mouseleave", () => {
-			image.src = "./img/start.png";
-		});
-	}
+    image.addEventListener("mouseleave", () => {
+      image.src = "./img/start.png";
+    });
+  }
 });
