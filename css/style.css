@@ -47,6 +47,8 @@ body {
 	position: absolute;
 	top: 50px;
 	right: 50px;
+
+	z-index: 104;
 }
 
 .info {
@@ -58,7 +60,7 @@ body {
 }
 
 .info p {
-	font-size: 20px;
+	font-size: 18px;
 }
 
 .taskbar {
@@ -78,13 +80,24 @@ body {
 }
 
 .gabe {
-	bottom: 50px;
+	bottom: 100px;
 	right: 30px;
+
+	z-index: 101;
 }
 
 .tux {
 	bottom: 200px;
 	right: 280px;
+
+	z-index: 101;
+}
+
+.eminem {
+	top: 490px;
+	right: 200px;
+
+	z-index: 100;
 }
 
 .tabs {
@@ -92,7 +105,7 @@ body {
 }
 
 .tabs p {
-	font-size: 16px;
+	font-size: 18px;
 }
 
 .intereses {
@@ -102,4 +115,19 @@ body {
 
 	width: 700px;
 	height: 500px;
+}
+
+.taskbar {
+	display: flex;
+	align-items: center;
+
+	height: 40px;
+	width: 100%;
+
+	background-color: #bfbfbf;
+	border: 1px solid #ffffff;
+}
+
+.start {
+	height: 38px;
 }

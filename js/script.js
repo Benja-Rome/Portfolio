@@ -56,12 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			e.preventDefault();
 
-			// NOTA: Borramos las líneas viejas de zIndex fijas (z=1 / z=10)
-			// de aquí adentro porque la Sección 1 ya se encarga de todo el z-index.
-
-			const currentWidth = windowEl.offsetWidth;
-			windowEl.style.width = currentWidth + "px";
-
 			const rect = windowEl.getBoundingClientRect();
 			const shiftX = e.clientX - rect.left;
 			const shiftY = e.clientY - rect.top;
@@ -112,4 +106,26 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		});
 	});
+
+	// ==========================================
+	// 4. CÓDIGO PARA STARTBUTTON
+	// ==========================================
+
+	const image = document.getElementById("startButton");
+
+	if (image) {
+		image.addEventListener("mousedown", (e) => {
+			e.preventDefault();
+			image.src = "./img/start-hundido.png";
+		});
+
+		image.addEventListener("mouseup", () => {
+			image.src = "./img/start.png";
+			console.log("Señal: Menú Inicio abierto");
+		});
+
+		image.addEventListener("mouseleave", () => {
+			image.src = "./img/start.png";
+		});
+	}
 });
