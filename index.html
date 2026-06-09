@@ -1,27 +1,116 @@
 <!doctype html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Portfolio</title>
-        <link rel="stylesheet" href="./css/style.css" />
-        <link rel="stylesheet" href="https://unpkg.com/98.css" />
-    </head>
-    <body>
-        <div class="wrapper">
-            <div class="window" style="width: 300px">
-                <div class="title-bar">
-                    <div class="title-bar-text">Soy una ventana</div>
-                    <div class="title-bar-controls">
-                        <button aria-label="Minimize"></button>
-                        <button aria-label="Maximize"></button>
-                        <button aria-label="Close"></button>
-                    </div>
-                </div>
-                <div class="window-body">
-                    <p>Ostia chaval, que soy una ventana</p>
-                </div>
-            </div>
-        </div>
-    </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Portfolio</title>
+		<link rel="stylesheet" href="./css/style.css" />
+		<link rel="stylesheet" href="https://unpkg.com/98.css" />
+		<script src="./js/script.js" defer></script>
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="left pene">
+				<div class="window info">
+					<div class="title-bar">
+						<div class="title-bar-text">Quién soy</div>
+						<div class="title-bar-controls">
+							<button aria-label="Minimize"></button>
+							<button aria-label="Maximize"></button>
+							<button aria-label="Close"></button>
+						</div>
+					</div>
+					<div class="window-body">
+						<p>
+							¡Hola! Me llamo Benjamín Romero. Tengo 16 años y me
+							gusta la compu
+						</p>
+					</div>
+				</div>
+				<div class="window intereses">
+					<div class="title-bar">
+						<div class="title-bar-text">Mis intereses</div>
+						<div class="title-bar-controls">
+							<button aria-label="Minimize"></button>
+							<button aria-label="Maximize"></button>
+							<button aria-label="Close"></button>
+						</div>
+					</div>
+					<div class="window-body">
+						<menu role=tablist>
+							<li role="tab" aria-selected="true" aria-controls="panel1"><a href="#tab1">Videojuegos</a></li>
+							<li role="tab" aria-selected="false" aria-controls="panel2"><a href="#tab2">Música</a></li>
+						</menu>
+						<div class="window tabs" role="tabpanel" id="panel1">
+						    <div class="window-body">
+							    <p>Tab1</p>
+						    </div>
+						</div>
+						<div class="window tabs" role="tabpanel" id="panel2" style="display: none;">
+						    <div class="window-body">
+							    <p>Tab2</p>
+						    </div>
+						</div>
+					</div>
+			</div>
+			<div class="right pene">
+				<div class="window mifoto" style="width: fit-content; height: fit-content;">
+					<div class="title-bar">
+						<div class="title-bar-text">Mi foto :)</div>
+						<div class="title-bar-controls">
+							<button aria-label="Minimize"></button>
+							<button aria-label="Maximize"></button>
+							<button aria-label="Close"></button>
+						</div>
+					</div>
+					<div class="window-body pfp">
+						<img
+							src="./img/eminem-confused.jpg"
+							alt="yo"
+							class="pfp"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="window memes gabe" style="width: fit-content; height: fit-content;">
+				<div class="title-bar">
+					<div class="title-bar-text">Jesus GabeN</div>
+					<div class="title-bar-controls">
+						<button aria-label="Minimize"></button>
+						<button aria-label="Maximize"></button>
+						<button aria-label="Close"></button>
+					</div>
+				</div>
+				<div class="window-body memesimg">
+					<img
+						src="./img/GabeN.webp"
+						alt="Gabe Newell Jesús"
+						class="memesimg"
+					/>
+				</div>
+			</div>
+			<div class="window memes tux" style="width: fit-content; height: fit-content;">
+				<div class="title-bar">
+					<div class="title-bar-text">The Working Tux</div>
+					<div class="title-bar-controls">
+						<button aria-label="Minimize"></button>
+						<button aria-label="Maximize"></button>
+						<button aria-label="Close"></button>
+					</div>
+				</div>
+				<div class="window-body memesimg">
+					<img
+						src="./img/tux.gif"
+						alt="Tux is working, leave him alone"
+						class="memesimg"
+					/>
+				</div>
+			</div>
+			<img
+				src="./img/windows-98-taskbar-1000px.webp"
+				alt="windows 98 taskbar"
+				class="taskbar"
+			/>
+		</div>
+	</body>
 </html>
