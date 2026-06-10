@@ -23,7 +23,7 @@ body {
 	width: 100%;
 }
 
-.pene {
+.miti {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
@@ -32,7 +32,7 @@ body {
 }
 
 /* RWD para Memes en pantallas chicas: entran 2 por fila con idéntico tamaño */
-.pene.right {
+.miti.right {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -138,12 +138,12 @@ img.memesimg {
 		position: relative;
 	}
 
-	.pene {
+	.miti {
 		flex-basis: 50%;
 		height: 100vh;
 	}
 
-	.pene.right {
+	.miti.right {
 		flex-direction: column;
 		flex-wrap: nowrap;
 	}
@@ -181,7 +181,7 @@ img.memesimg {
 	.mifoto {
 		top: 4vh;
 		left: 52vw;
-		width: 20rem;
+		width: 30rem;
 		max-width: none;
 		margin: 0;
 	}
