@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 	// ==========================================
-	// 1. CONTROL DE Z-INDEX INTELIGENTE (SIN ESCALA INFINITA)
+	// 1. CONTROL DE Z-INDEX INTELIGENTE
 	// ==========================================
 	const windows = Array.from(document.querySelectorAll(".window"));
 
@@ -48,8 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		titleBar.addEventListener("mousedown", (e) => {
 			if (e.target.closest(".title-bar-controls")) return;
 
-			/* Agregado para impedir el arrastre en entornos móviles y no romper la cuadrícula elástica */
-			if (window.innerWidth < 768) return;
+			// Si la ventana está maximizada o minimizada, bloquear el arrastre para evitar bugs visuales
+			if (
+				windowEl.classList.contains("maximized") ||
+				windowEl.classList.contains("minimized")
+			)
+				return;
 
 			e.preventDefault();
 
@@ -59,9 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			windowEl.style.position = "absolute";
 			windowEl.style.margin = "0";
-
-			windowEl.style.right = "auto";
-			windowEl.style.bottom = "auto";
 
 			function moveAt(clientX, clientY) {
 				windowEl.style.left = clientX - shiftX + "px";
@@ -87,29 +88,43 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// ==========================================
-	// 3. CÓDIGO DE LAS PESTAÑAS (TABS)
+	// 3. ACCIONES EXCLUSIVAS DE MINIMIZAR Y MAXIMIZAR
 	// ==========================================
-	const tabs = document.querySelectorAll('[role="tab"]');
-	const panels = document.querySelectorAll('[role="tabpanel"]');
+	windows.forEach((windowEl) => {
+		const minimizeBtn = windowEl.querySelector(
+			'button[aria-label="Minimize"]',
+		);
+		const maximizeBtn = windowEl.querySelector(
+			'button[aria-label="Maximize"]',
+		);
+		const closeBtn = windowEl.querySelector('button[aria-label="Close"]');
 
-	tabs.forEach((tab) => {
-		tab.addEventListener("click", (event) => {
-			event.preventDefault();
-			tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-			tab.setAttribute("aria-selected", "true");
-			panels.forEach((panel) => (panel.style.display = "none"));
+		if (minimizeBtn) {
+			minimizeBtn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				windowEl.classList.remove("maximized"); // Quita maximizar si existía
+				windowEl.classList.toggle("minimized");
+			});
+		}
 
-			const targetPanelId = tab.getAttribute("aria-controls");
-			const targetPanel = document.getElementById(targetPanelId);
-			if (targetPanel) {
-				/* Modificado de "block" a "flex" para asegurar el estiramiento responsivo interno del panel hundido */
-				targetPanel.style.display = "flex";
-			}
-		});
+		if (maximizeBtn) {
+			maximizeBtn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				windowEl.classList.remove("minimized"); // Quita minimizar si existía
+				windowEl.classList.toggle("maximized");
+			});
+		}
+
+		if (closeBtn) {
+			closeBtn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				windowEl.style.display = "none";
+			});
+		}
 	});
 
 	// ==========================================
-	// 4. CÓDIGO PARA STARTBUTTON
+	// 4. CONTROL DEL BOTÓN DE INICIO
 	// ==========================================
 	const image = document.getElementById("startButton");
 
@@ -128,27 +143,4 @@ document.addEventListener("DOMContentLoaded", () => {
 			image.src = "./img/start.png";
 		});
 	}
-
-	// ==========================================
-	// 4. CÓDIGO PARA MINIMIZAR
-	// ==========================================
-
-	document.querySelectorAll(".mini").forEach((button) => {
-		button.addEventListener("click", function () {
-			// 1. Find the parent window container
-			const parentWindow = this.closest(".window");
-			if (!parentWindow) return;
-
-			// 2. Find the specific body inside THIS window
-			const windowBody = parentWindow.querySelector(".window-body");
-			if (!windowBody) return;
-
-			// 3. Toggle the display style of the body
-			if (windowBody.style.display === "none") {
-				windowBody.style.display = "block";
-			} else {
-				windowBody.style.display = "none";
-			}
-		});
-	});
 });

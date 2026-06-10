@@ -1,5 +1,5 @@
 /* ==========================================
-   ESTILOS BASE (MOBILE FIRST)
+   ESTILOS BASE (MOBILE FIRST) - 100% RELATIVO
    ========================================== */
 body {
 	background-image: url("../img/windows.gif");
@@ -15,21 +15,27 @@ body {
 
 .wrapper {
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	padding: 15px;
-	padding-bottom: 45px;
+	flex-direction: column;
+	padding: 1rem;
+	padding-bottom: 4.5rem;
 	box-sizing: border-box;
-	gap: 15px;
+	gap: 1rem;
 	width: 100%;
 }
 
 .pene {
-	flex-basis: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
+	gap: 1rem;
+	width: 100%;
 	box-sizing: border-box;
+}
+
+/* RWD para Memes en pantallas chicas: entran 2 por fila con idéntico tamaño */
+.pene.right {
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 
 .window {
@@ -38,106 +44,68 @@ body {
 	box-sizing: border-box;
 }
 
-.pfp,
-.memesimg {
-	max-width: 100%;
-	height: auto;
+.window.mifoto {
+	width: 100%; /* La foto ocupa el ancho completo disponible en mobile */
 }
 
-.info p,
-.tabs p {
-	font-size: 18px;
+.window.memes {
+	width: calc(50% - 0.5rem); /* Entran exactamente dos memes por fila */
 }
 
-.intereses {
-	display: flex;
-	flex-direction: column;
-	height: 500px;
+/* --- Estados Especiales de Ventanas --- */
+.window.minimized {
+	height: auto !important;
+	min-height: 0 !important;
 }
 
-.intereses > .window-body {
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	margin: 8px;
+.window.minimized .window-body {
+	display: none !important;
 }
 
-.tabs {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	margin-top: 4px;
+.window.maximized {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100vw !important;
+	height: calc(
+		100vh - 4vh
+	) !important; /* Llena la pantalla respetando la barra */
+	z-index: 200 !important;
+	margin: 0 !important;
 }
 
-.tabs .window-body {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-}
-
-/* ==========================================================================
-   SECCIÓN DE JUEGOS REPARADA (Tabla nativa de 98.css con proporciones correctas)
-   ========================================================================== */
-.juegos {
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	padding: 0 !important;
-}
-
-.juegos .sunken-panel {
-	flex-grow: 1;
+.window.maximized .window-body {
+	display: block !important;
+	height: calc(100% - 2.5rem) !important;
 	overflow-y: auto;
-	box-sizing: border-box;
 }
 
-/* Forzamos a la tabla a ocupar el 100% del ancho del panel blanco */
-.juegos table.interactive {
+/* Ajuste fluido de imágenes internas */
+img.pfp,
+img.memesimg {
 	width: 100%;
-	border-collapse: collapse;
-	table-layout: fixed; /* Evita que el navegador mueva las columnas a su antojo */
-}
-
-/* Distribuimos el espacio disponible de las columnas de forma limpia */
-.juegos table th:nth-child(1),
-.juegos table td:nth-child(1) {
-	width: 150px; /* Ancho fijo para la columna de las portadas */
-}
-
-.juegos table th:nth-child(2),
-.juegos table td:nth-child(2) {
-	width: 50%; /* Se reparte equitativamente el espacio restante */
-}
-
-.juegos table th:nth-child(3),
-.juegos table td:nth-child(3) {
-	width: 50%; /* Se reparte equitativamente el espacio restante */
-}
-
-/* Estilos de alineación y espaciado para las celdas */
-.juegos table th,
-.juegos table td {
-	text-align: left;
-	vertical-align: middle; /* Centra el texto verticalmente respecto a la altura de la portada */
-	padding: 8px;
-	box-sizing: border-box;
-}
-
-/* La celda de la portada no lleva padding para aprovechar al máximo su tamaño */
-.juegos table td:first-child {
-	padding: 0;
-}
-
-/* La imagen define el alto de la fila de forma natural y vertical (estilo póster) */
-.cover {
-	width: 100%; /* Ocupa todo el ancho de su columna (150px) */
-	height: 190px; /* Un alto ideal para que luzca grande y cubra espacio vertical */
-	object-fit: cover; /* Mantiene las proporciones correctas de la portada sin estirarla feo */
+	height: auto;
 	display: block;
 }
 
+.info p {
+	font-size: 1.15rem;
+}
+
+.videojuegos,
+.musica {
+	display: flex;
+	flex-direction: column;
+}
+
+.videojuegos .window-body,
+.musica .window-body {
+	flex-grow: 1;
+	margin: 0.5rem;
+}
+
 /* ==========================================
-   RESTO DE COMPONENTES BASE
+   COMPONENTES DE INTERFAZ GENERAL
    ========================================== */
 .taskbar {
 	display: flex;
@@ -145,11 +113,11 @@ body {
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	z-index: 105;
+	z-index: 250;
 	height: 4vh;
 	width: 100%;
 	background-color: #bfbfbf;
-	border: 1px solid #ffffff;
+	border-top: 0.06rem solid #ffffff;
 }
 
 .start {
@@ -157,9 +125,9 @@ body {
 }
 
 /* ==========================================
-   PANTALLAS GRANDES (DESKTOP - RWD FLUIDO)
+   PANTALLAS GRANDES (DESKTOP)
    ========================================== */
-@media (min-width: 720px) {
+@media (min-width: 48rem) {
 	body {
 		height: 100vh;
 		overflow: hidden;
@@ -170,6 +138,7 @@ body {
 
 	.wrapper {
 		flex-wrap: nowrap;
+		flex-direction: row;
 		height: 100vh;
 		width: 100vw;
 		padding: 0;
@@ -181,63 +150,64 @@ body {
 		height: 100vh;
 	}
 
+	.pene.right {
+		flex-direction: column;
+		flex-wrap: nowrap;
+	}
+
+	/* Tamaños fijos en REM en escritorio: NUNCA se encogen ni cambian de tamaño al arrastrar */
 	.window {
 		position: absolute;
 	}
 
-	.info {
-		top: 5vh;
-		left: 3vw;
-		width: 44vw;
-		max-width: 700px;
+	.window.minimized {
+		min-width: 12rem; /* Mantiene barra de título legible al minimizar en escritorio */
 	}
 
-	.intereses {
-		top: 22vh;
+	.info {
+		top: 4vh;
 		left: 3vw;
-		width: 44vw;
-		max-width: 700px;
-		height: 65vh;
-		max-height: 520px;
+		width: 38rem;
+	}
+
+	.videojuegos {
+		top: 21vh;
+		left: 3vw;
+		width: 38rem;
+		height: 43vh;
+		min-height: 15rem;
+	}
+
+	.musica {
+		top: 67vh;
+		left: 3vw;
+		width: 38rem;
+		height: 23vh;
+		min-height: 8rem;
 	}
 
 	.mifoto {
-		top: 5vh;
+		top: 4vh;
 		left: 52vw;
-		z-index: 104;
+		width: 20rem;
 	}
 
-	.pfp {
-		width: 25vw;
-		max-width: 400px;
-		min-width: 220px;
-	}
-
-	.memes {
-		z-index: 100;
-	}
-
-	.memesimg {
-		width: 13vw;
-		max-width: 200px;
-		min-width: 120px;
-	}
-
-	.gabe {
-		top: 70vh;
-		left: 80vw;
-		z-index: 101;
-	}
-
-	.tux {
-		top: 52vh;
-		left: 72vw;
-		z-index: 101;
+	.window.memes {
+		width: 13rem; /* Todos los memes miden exactamente lo mismo en escritorio */
 	}
 
 	.eminem {
-		top: 60vh;
+		top: 56vh;
 		left: 52vw;
-		z-index: 100;
+	}
+
+	.tux {
+		top: 50vh;
+		left: 70vw;
+	}
+
+	.gabe {
+		top: 68vh;
+		left: 82vw;
 	}
 }
