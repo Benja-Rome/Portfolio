@@ -1,15 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
+	// Breakpoint de diseño móvil: 768px (equivalente a 48rem)
+	const MOBILE_BREAKPOINT = 768;
+
+	const windows = Array.from(document.querySelectorAll(".window"));
+
+	// ==========================================
+	// GESTOR DINÁMICO DE ESTADO DE BOTONES
+	// ==========================================
+	function updateButtonStates(windowEl) {
+		const minimizeBtn = windowEl.querySelector(
+			'button[aria-label="Minimize"]',
+		);
+		const maximizeBtn = windowEl.querySelector(
+			'button[aria-label="Maximize"]',
+		);
+
+		if (windowEl.classList.contains("minimized")) {
+			// Si está minimizado: se bloquea minimizar y se activa maximizar (que actuará como restaurar)
+			if (minimizeBtn) minimizeBtn.disabled = true;
+			if (maximizeBtn) maximizeBtn.disabled = false;
+		} else {
+			// Estado normal: se activa minimizar y maximizar se bloquea (porque no se puede maximizar en serio)
+			if (minimizeBtn) minimizeBtn.disabled = false;
+			if (maximizeBtn) maximizeBtn.disabled = true;
+		}
+	}
+
+	// Inicializa los botones al cargar la página
+	windows.forEach((windowEl) => updateButtonStates(windowEl));
+
 	// ==========================================
 	// 1. CONTROL DE Z-INDEX INTELIGENTE
 	// ==========================================
-	const windows = Array.from(document.querySelectorAll(".window"));
-
 	windows.forEach((w, index) => {
 		if (!w.style.zIndex) w.style.zIndex = index + 1;
 	});
 
 	windows.forEach((windowEl) => {
 		windowEl.addEventListener("mousedown", () => {
+			if (window.innerWidth < MOBILE_BREAKPOINT) return;
+
 			let maxZ = 0;
 			windows.forEach((w) => {
 				const currentZ = parseInt(w.style.zIndex) || 1;
@@ -47,13 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		titleBar.addEventListener("mousedown", (e) => {
 			if (e.target.closest(".title-bar-controls")) return;
-
-			// Si la ventana está maximizada o minimizada, bloquear el arrastre para evitar bugs visuales
-			if (
-				windowEl.classList.contains("maximized") ||
-				windowEl.classList.contains("minimized")
-			)
-				return;
+			if (window.innerWidth < MOBILE_BREAKPOINT) return;
+			if (windowEl.classList.contains("minimized")) return;
 
 			e.preventDefault();
 
@@ -88,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// ==========================================
-	// 3. ACCIONES EXCLUSIVAS DE MINIMIZAR Y MAXIMIZAR
+	// 3. ACCIONES EXCLUSIVAS DE MINIMIZAR Y RESTAURAR
 	// ==========================================
 	windows.forEach((windowEl) => {
 		const minimizeBtn = windowEl.querySelector(
@@ -102,16 +127,24 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (minimizeBtn) {
 			minimizeBtn.addEventListener("click", (e) => {
 				e.stopPropagation();
-				windowEl.classList.remove("maximized"); // Quita maximizar si existía
-				windowEl.classList.toggle("minimized");
+				if (window.innerWidth < MOBILE_BREAKPOINT) return;
+				if (windowEl.classList.contains("minimized")) return;
+
+				windowEl.classList.add("minimized");
+				updateButtonStates(windowEl);
 			});
 		}
 
 		if (maximizeBtn) {
 			maximizeBtn.addEventListener("click", (e) => {
 				e.stopPropagation();
-				windowEl.classList.remove("minimized"); // Quita minimizar si existía
-				windowEl.classList.toggle("maximized");
+				if (window.innerWidth < MOBILE_BREAKPOINT) return;
+
+				// El botón de maximizar ahora solo responde si la ventana está minimizada (actúa como Restaurar)
+				if (windowEl.classList.contains("minimized")) {
+					windowEl.classList.remove("minimized");
+					updateButtonStates(windowEl);
+				}
 			});
 		}
 

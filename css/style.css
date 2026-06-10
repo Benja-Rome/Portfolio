@@ -45,14 +45,16 @@ body {
 }
 
 .window.mifoto {
-	width: 100%; /* La foto ocupa el ancho completo disponible en mobile */
+	width: 100%;
+	max-width: 18rem;
+	margin: 0 auto;
 }
 
 .window.memes {
-	width: calc(50% - 0.5rem); /* Entran exactamente dos memes por fila */
+	width: calc(50% - 0.5rem);
 }
 
-/* --- Estados Especiales de Ventanas --- */
+/* --- Estados Especiales de Ventanas (Solo Minimizar) --- */
 .window.minimized {
 	height: auto !important;
 	min-height: 0 !important;
@@ -60,24 +62,6 @@ body {
 
 .window.minimized .window-body {
 	display: none !important;
-}
-
-.window.maximized {
-	position: fixed !important;
-	top: 0 !important;
-	left: 0 !important;
-	width: 100vw !important;
-	height: calc(
-		100vh - 4vh
-	) !important; /* Llena la pantalla respetando la barra */
-	z-index: 200 !important;
-	margin: 0 !important;
-}
-
-.window.maximized .window-body {
-	display: block !important;
-	height: calc(100% - 2.5rem) !important;
-	overflow-y: auto;
 }
 
 /* Ajuste fluido de imágenes internas */
@@ -102,6 +86,15 @@ img.memesimg {
 .musica .window-body {
 	flex-grow: 1;
 	margin: 0.5rem;
+}
+
+/* Indicador visual de botones interactivos anulados en celular (RWD UX) */
+@media (max-width: 47.94rem) {
+	.title-bar-controls button[aria-label="Minimize"],
+	.title-bar-controls button[aria-label="Maximize"] {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
 }
 
 /* ==========================================
@@ -155,13 +148,12 @@ img.memesimg {
 		flex-wrap: nowrap;
 	}
 
-	/* Tamaños fijos en REM en escritorio: NUNCA se encogen ni cambian de tamaño al arrastrar */
 	.window {
 		position: absolute;
 	}
 
 	.window.minimized {
-		min-width: 12rem; /* Mantiene barra de título legible al minimizar en escritorio */
+		min-width: 12rem; /* Mantiene la barrita visible y legible al minimizar */
 	}
 
 	.info {
@@ -190,10 +182,12 @@ img.memesimg {
 		top: 4vh;
 		left: 52vw;
 		width: 20rem;
+		max-width: none;
+		margin: 0;
 	}
 
 	.window.memes {
-		width: 13rem; /* Todos los memes miden exactamente lo mismo en escritorio */
+		width: 13rem;
 	}
 
 	.eminem {
