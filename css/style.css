@@ -39,8 +39,7 @@ body {
 }
 
 .pfp,
-.memesimg,
-.cover {
+.memesimg {
 	max-width: 100%;
 	height: auto;
 }
@@ -76,6 +75,9 @@ body {
 	height: 100%;
 }
 
+/* ==========================================================================
+   SECCIÓN DE JUEGOS REPARADA (Tabla nativa de 98.css con proporciones correctas)
+   ========================================================================== */
 .juegos {
 	flex-grow: 1;
 	display: flex;
@@ -89,6 +91,54 @@ body {
 	box-sizing: border-box;
 }
 
+/* Forzamos a la tabla a ocupar el 100% del ancho del panel blanco */
+.juegos table.interactive {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed; /* Evita que el navegador mueva las columnas a su antojo */
+}
+
+/* Distribuimos el espacio disponible de las columnas de forma limpia */
+.juegos table th:nth-child(1),
+.juegos table td:nth-child(1) {
+	width: 150px; /* Ancho fijo para la columna de las portadas */
+}
+
+.juegos table th:nth-child(2),
+.juegos table td:nth-child(2) {
+	width: 50%; /* Se reparte equitativamente el espacio restante */
+}
+
+.juegos table th:nth-child(3),
+.juegos table td:nth-child(3) {
+	width: 50%; /* Se reparte equitativamente el espacio restante */
+}
+
+/* Estilos de alineación y espaciado para las celdas */
+.juegos table th,
+.juegos table td {
+	text-align: left;
+	vertical-align: middle; /* Centra el texto verticalmente respecto a la altura de la portada */
+	padding: 8px;
+	box-sizing: border-box;
+}
+
+/* La celda de la portada no lleva padding para aprovechar al máximo su tamaño */
+.juegos table td:first-child {
+	padding: 0;
+}
+
+/* La imagen define el alto de la fila de forma natural y vertical (estilo póster) */
+.cover {
+	width: 100%; /* Ocupa todo el ancho de su columna (150px) */
+	height: 190px; /* Un alto ideal para que luzca grande y cubra espacio vertical */
+	object-fit: cover; /* Mantiene las proporciones correctas de la portada sin estirarla feo */
+	display: block;
+}
+
+/* ==========================================
+   RESTO DE COMPONENTES BASE
+   ========================================== */
 .taskbar {
 	display: flex;
 	align-items: center;
@@ -96,14 +146,14 @@ body {
 	bottom: 0;
 	left: 0;
 	z-index: 105;
-	height: 30px;
+	height: 4vh;
 	width: 100%;
 	background-color: #bfbfbf;
 	border: 1px solid #ffffff;
 }
 
 .start {
-	height: 29px;
+	height: 4vh;
 }
 
 /* ==========================================
@@ -126,13 +176,11 @@ body {
 		position: relative;
 	}
 
-	/* Modificado: Se removió position:relative para alinear los cálculos de JS con la pantalla */
 	.pene {
 		flex-basis: 50%;
 		height: 100vh;
 	}
 
-	/* Modificado: Convertidos todos los px fijos a unidades fluidas vw/vh con límites de seguridad */
 	.window {
 		position: absolute;
 	}
@@ -154,7 +202,6 @@ body {
 		min-height: 380px;
 	}
 
-	/* Modificado: Posicionado el bloque derecho usando 'left' fluido para arreglar el arrastre */
 	.mifoto {
 		top: 5vh;
 		left: 52vw;
