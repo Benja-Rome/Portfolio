@@ -166,8 +166,8 @@ img.memesimg {
 		top: 21vh;
 		left: 3vw;
 		width: 38rem;
-		height: 43vh;
-		min-height: 15rem;
+		height: auto;
+		/*min-height: 15rem;*/
 	}
 
 	.musica {
