@@ -1,124 +1,131 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================
-  // 1. CONTROL DE Z-INDEX INTELIGENTE (SIN ESCALA INFINITA)
-  // ==========================================
-  const windows = Array.from(document.querySelectorAll(".window"));
+	// ==========================================
+	// 1. CONTROL DE Z-INDEX INTELIGENTE (SIN ESCALA INFINITA)
+	// ==========================================
+	const windows = Array.from(document.querySelectorAll(".window"));
 
-  windows.forEach((w, index) => {
-    if (!w.style.zIndex) w.style.zIndex = index + 1;
-  });
+	windows.forEach((w, index) => {
+		if (!w.style.zIndex) w.style.zIndex = index + 1;
+	});
 
-  windows.forEach((windowEl) => {
-    windowEl.addEventListener("mousedown", () => {
-      let maxZ = 0;
-      windows.forEach((w) => {
-        const currentZ = parseInt(w.style.zIndex) || 1;
-        if (currentZ > maxZ) maxZ = currentZ;
-      });
+	windows.forEach((windowEl) => {
+		windowEl.addEventListener("mousedown", () => {
+			let maxZ = 0;
+			windows.forEach((w) => {
+				const currentZ = parseInt(w.style.zIndex) || 1;
+				if (currentZ > maxZ) maxZ = currentZ;
+			});
 
-      if (parseInt(windowEl.style.zIndex) === maxZ && maxZ > 0) return;
+			if (parseInt(windowEl.style.zIndex) === maxZ && maxZ > 0) return;
 
-      const nextZ = maxZ + 1;
-      windowEl.style.zIndex = nextZ;
+			const nextZ = maxZ + 1;
+			windowEl.style.zIndex = nextZ;
 
-      if (nextZ > 100) {
-        windows.sort(
-          (a, b) =>
-            (parseInt(a.style.zIndex) || 1) - (parseInt(b.style.zIndex) || 1),
-        );
-        windows.forEach((w, index) => {
-          w.style.zIndex = index + 1;
-        });
-      }
-    });
-  });
+			if (nextZ > 100) {
+				windows.sort(
+					(a, b) =>
+						(parseInt(a.style.zIndex) || 1) -
+						(parseInt(b.style.zIndex) || 1),
+				);
+				windows.forEach((w, index) => {
+					w.style.zIndex = index + 1;
+				});
+			}
+		});
+	});
 
-  // ==========================================
-  // 2. FUNCIÓN PARA EL ARRASTRE (DRAG & DROP)
-  // ==========================================
-  const titleBars = document.querySelectorAll(".title-bar");
+	// ==========================================
+	// 2. FUNCIÓN PARA EL ARRASTRE (DRAG & DROP)
+	// ==========================================
+	const titleBars = document.querySelectorAll(".title-bar");
 
-  titleBars.forEach((titleBar) => {
-    const windowEl = titleBar.closest(".window");
-    if (!windowEl) return;
+	titleBars.forEach((titleBar) => {
+		const windowEl = titleBar.closest(".window");
+		if (!windowEl) return;
 
-    titleBar.style.cursor = "move";
+		titleBar.style.cursor = "move";
 
-    titleBar.addEventListener("mousedown", (e) => {
-      if (e.target.closest(".title-bar-controls")) return;
+		titleBar.addEventListener("mousedown", (e) => {
+			if (e.target.closest(".title-bar-controls")) return;
 
-      e.preventDefault();
+			/* Agregado para impedir el arrastre en entornos móviles y no romper la cuadrícula elástica */
+			if (window.innerWidth < 768) return;
 
-      const rect = windowEl.getBoundingClientRect();
-      const shiftX = e.clientX - rect.left;
-      const shiftY = e.clientY - rect.top;
+			e.preventDefault();
 
-      windowEl.style.position = "absolute";
-      windowEl.style.margin = "0";
+			const rect = windowEl.getBoundingClientRect();
+			const shiftX = e.clientX - rect.left;
+			const shiftY = e.clientY - rect.top;
 
-      function moveAt(clientX, clientY) {
-        windowEl.style.left = clientX - shiftX + "px";
-        windowEl.style.top = clientY - shiftY + "px";
-      }
+			windowEl.style.position = "absolute";
+			windowEl.style.margin = "0";
 
-      moveAt(e.clientX, e.clientY);
+			windowEl.style.right = "auto";
+			windowEl.style.bottom = "auto";
 
-      function onMouseMove(event) {
-        moveAt(event.clientX, event.clientY);
-      }
+			function moveAt(clientX, clientY) {
+				windowEl.style.left = clientX - shiftX + "px";
+				windowEl.style.top = clientY - shiftY + "px";
+			}
 
-      document.addEventListener("mousemove", onMouseMove);
+			moveAt(e.clientX, e.clientY);
 
-      document.addEventListener(
-        "mouseup",
-        () => {
-          document.removeEventListener("mousemove", onMouseMove);
-        },
-        { once: true },
-      );
-    });
-  });
+			function onMouseMove(event) {
+				moveAt(event.clientX, event.clientY);
+			}
 
-  // ==========================================
-  // 3. CÓDIGO DE LAS PESTAÑAS (TABS)
-  // ==========================================
-  const tabs = document.querySelectorAll('[role="tab"]');
-  const panels = document.querySelectorAll('[role="tabpanel"]');
+			document.addEventListener("mousemove", onMouseMove);
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", (event) => {
-      event.preventDefault();
-      tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-      tab.setAttribute("aria-selected", "true");
-      panels.forEach((panel) => (panel.style.display = "none"));
+			document.addEventListener(
+				"mouseup",
+				() => {
+					document.removeEventListener("mousemove", onMouseMove);
+				},
+				{ once: true },
+			);
+		});
+	});
 
-      const targetPanelId = tab.getAttribute("aria-controls");
-      const targetPanel = document.getElementById(targetPanelId);
-      if (targetPanel) {
-        /* Modificaciones agregadas para solucionar la altura de las pestañas */
-        targetPanel.style.display = "flex";
-      }
-    });
-  });
+	// ==========================================
+	// 3. CÓDIGO DE LAS PESTAÑAS (TABS)
+	// ==========================================
+	const tabs = document.querySelectorAll('[role="tab"]');
+	const panels = document.querySelectorAll('[role="tabpanel"]');
 
-  // ==========================================
-  // 4. CÓDIGO PARA STARTBUTTON
-  // ==========================================
-  const image = document.getElementById("startButton");
+	tabs.forEach((tab) => {
+		tab.addEventListener("click", (event) => {
+			event.preventDefault();
+			tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
+			tab.setAttribute("aria-selected", "true");
+			panels.forEach((panel) => (panel.style.display = "none"));
 
-  if (image) {
-    image.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      image.src = "./img/start-hundido.png";
-    });
+			const targetPanelId = tab.getAttribute("aria-controls");
+			const targetPanel = document.getElementById(targetPanelId);
+			if (targetPanel) {
+				/* Modificado de "block" a "flex" para asegurar el estiramiento responsivo interno del panel hundido */
+				targetPanel.style.display = "flex";
+			}
+		});
+	});
 
-    image.addEventListener("mouseup", () => {
-      image.src = "./img/start.png";
-      console.log("Señal: Menú Inicio abierto");
-    });
+	// ==========================================
+	// 4. CÓDIGO PARA STARTBUTTON
+	// ==========================================
+	const image = document.getElementById("startButton");
 
-    image.addEventListener("mouseleave", () => {
-      image.src = "./img/start.png";
-    });
-  }
+	if (image) {
+		image.addEventListener("mousedown", (e) => {
+			e.preventDefault();
+			image.src = "./img/start-hundido.png";
+		});
+
+		image.addEventListener("mouseup", () => {
+			image.src = "./img/start.png";
+			console.log("Señal: Menú Inicio abierto");
+		});
+
+		image.addEventListener("mouseleave", () => {
+			image.src = "./img/start.png";
+		});
+	}
 });
