@@ -128,4 +128,27 @@ document.addEventListener("DOMContentLoaded", () => {
 			image.src = "./img/start.png";
 		});
 	}
+
+	// ==========================================
+	// 4. CÓDIGO PARA MINIMIZAR
+	// ==========================================
+
+	document.querySelectorAll(".mini").forEach((button) => {
+		button.addEventListener("click", function () {
+			// 1. Find the parent window container
+			const parentWindow = this.closest(".window");
+			if (!parentWindow) return;
+
+			// 2. Find the specific body inside THIS window
+			const windowBody = parentWindow.querySelector(".window-body");
+			if (!windowBody) return;
+
+			// 3. Toggle the display style of the body
+			if (windowBody.style.display === "none") {
+				windowBody.style.display = "block";
+			} else {
+				windowBody.style.display = "none";
+			}
+		});
+	});
 });

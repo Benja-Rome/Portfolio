@@ -159,7 +159,7 @@ body {
 /* ==========================================
    PANTALLAS GRANDES (DESKTOP - RWD FLUIDO)
    ========================================== */
-@media (min-width: 768px) {
+@media (min-width: 720px) {
 	body {
 		height: 100vh;
 		overflow: hidden;
@@ -199,7 +199,6 @@ body {
 		max-width: 700px;
 		height: 65vh;
 		max-height: 520px;
-		min-height: 380px;
 	}
 
 	.mifoto {
