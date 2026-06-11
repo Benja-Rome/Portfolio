@@ -78,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		titleBar.addEventListener("mousedown", (e) => {
 			if (e.target.closest(".title-bar-controls")) return;
 			if (window.innerWidth < MOBILE_BREAKPOINT) return;
-			if (windowEl.classList.contains("minimized")) return;
 
 			e.preventDefault();
 
@@ -90,8 +89,30 @@ document.addEventListener("DOMContentLoaded", () => {
 			windowEl.style.margin = "0";
 
 			function moveAt(clientX, clientY) {
-				windowEl.style.left = clientX - shiftX + "px";
-				windowEl.style.top = clientY - shiftY + "px";
+				// 1. Calculate the intended placement coordinates
+				let newX = clientX - shiftX;
+				let newY = clientY - shiftY;
+
+				const taskbarHeightPx = window.innerHeight * 0.04;
+
+				// 2. Determine maximum bounds based on real-time dimensions
+				const maxX = window.innerWidth - windowEl.offsetWidth;
+				const maxY =
+					window.innerHeight -
+					windowEl.offsetHeight -
+					taskbarHeightPx;
+
+				// 3. Clamp X coordinates (Left and Right screen limits)
+				if (newX < 0) newX = 0;
+				if (newX > maxX) newX = maxX;
+
+				// 4. Clamp Y coordinates (Top and Bottom screen limits)
+				if (newY < 0) newY = 0;
+				if (newY > maxY) newY = maxY;
+
+				// 5. Safely apply the restricted values
+				windowEl.style.left = newX + "px";
+				windowEl.style.top = newY + "px";
 			}
 
 			moveAt(e.clientX, e.clientY);
